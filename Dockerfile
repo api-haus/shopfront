@@ -6,14 +6,13 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable && pnpm i -g pnpm@9.4.0
 
 #COPY . /app
+COPY ["package.json", "pnpm-lock.yaml", "./"]
 WORKDIR /app
 
 FROM base AS prod-deps
-COPY ["package.json", "pnpm-lock.yaml", "./"]
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
 FROM base AS build
-COPY ["package.json", "pnpm-lock.yaml", "./"]
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm run build
