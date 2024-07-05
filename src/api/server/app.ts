@@ -1,8 +1,15 @@
 import fastify from 'fastify';
 import autoload from '@fastify/autoload';
-import path from 'node:path';
+import path, { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { logger } from '../../libs/logger.js';
 
-export const app = fastify();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export const app = fastify({
+  logger,
+});
 
 await app.register(
   autoload,
