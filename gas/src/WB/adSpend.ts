@@ -4,10 +4,10 @@ import { API_PREFIX } from './constants';
 /**
  * @OnlyCurrentDoc
  */
-export function AdSpend() {
+export function AdSpend(dateFrom: string, dateTo: string) {
   const { json } = httpRequest(
     'get',
-    `${API_PREFIX}/adv-spend`,
+    `${API_PREFIX}/adv-spend/${dateFrom}/${dateTo}`,
   );
 
   return json;
