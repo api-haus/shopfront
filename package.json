@@ -1,13 +1,12 @@
 {
   "name": "shopfront",
   "version": "1.0.0",
-  "main": "dist/bin/index.js",
+  "main": "dist/bin/serve.js",
   "type": "module",
   "scripts": {
     "lint": "eslint . --ignore-pattern \"dist/*\" --ignore-pattern \"gas/*\" --ignore-pattern eslint.config.js --ignore-pattern jest.config.js",
     "lint:fix": "pnpm lint --fix",
-    "gs:push": "clasp push",
-    "gs:push:watch": "clasp push --watch",
+    "gs:push": "(cd gas || exit 1) && pnpm push",
     "watch": "tsx watch src/bin/serve.ts | pino-pretty",
     "bin:serve": "node --enable-source-maps dist/bin/serve.js",
     "bin:cron": "node --enable-source-maps dist/bin/cron.js",
