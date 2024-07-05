@@ -1,0 +1,26 @@
+services:
+  sf-api_server:
+    image: local/sf-api:server
+    build:
+      context: ..
+      target: server
+    env_file: docker.env
+    depends_on:
+      - mongodb
+  sf-api_downloader:
+    image: local/sf-api:downloader
+    build:
+      context: ..
+      target: downloader
+    env_file: docker.env
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongodb/mongodb-community-server:7.0.12-ubi9
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+    volumes:
+      - type: bind
+        source: ./mongo_data
+        target: /data/db
