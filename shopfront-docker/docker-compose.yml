@@ -1,6 +1,8 @@
 services:
   sf-api_serve:
     image: local/sf-api:serve
+    ports:
+      - "80:8080"
     build:
       context: ..
       target: serve
