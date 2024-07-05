@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "rollup --config",
-    "deploy": "clasp push"
+    "push": "pnpm build && clasp push -f"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

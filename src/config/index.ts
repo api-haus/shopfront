@@ -1,8 +1,10 @@
 import 'dotenv/config';
+
+import { type FastifyListenOptions } from 'fastify';
+import type { MongoClientOptions } from 'mongodb';
+import { type LoggerOptions } from 'pino';
 import { newConfig, number, string } from 'ts-app-env';
-import { MongoClientOptions } from 'mongodb';
-import { FastifyListenOptions } from 'fastify/types/instance';
-import { PinoLoggerOptions } from 'fastify/types/logger';
+import type { RetryHandler } from 'undici';
 
 const server = {
   port: number({
@@ -19,6 +21,9 @@ const mongo = {
     env: 'MONGO_CONNECTION_URL',
   }),
   options: {} as MongoClientOptions,
+  databases: {
+    cache: 'cached_rows',
+  },
 };
 const logger = {
   level: string({
@@ -29,12 +34,28 @@ const logger = {
     env: 'APP_NAME',
     default: 'sf-api',
   }),
-} as PinoLoggerOptions;
+} as LoggerOptions;
+const wildberries = {
+  api: {
+    testingKey: string({
+      env: 'WB_TESTING_KEY',
+      default: '',
+    }),
+    retryOptions: {
+      maxRetries: 15,
+      minTimeout: 20_000,
+      maxTimeout: 600_000,
+      retryAfter: true,
+      timeoutFactor: 1.5,
+    } as RetryHandler.RetryOptions,
+  },
+};
 
 const env = {
   mongo,
   logger,
   server,
+  wildberries,
 };
 
 export default newConfig(

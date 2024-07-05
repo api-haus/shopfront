@@ -1,8 +1,9 @@
 // @ts-check
 
 import eslint from '@eslint/js';
-import typescriptEslint from 'typescript-eslint';
 import stylistic from '@stylistic/eslint-plugin';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import typescriptEslint from 'typescript-eslint';
 
 export default typescriptEslint.config(
   eslint.configs.recommended,
@@ -15,7 +16,19 @@ export default typescriptEslint.config(
     semi: true,
   }),
   {
-    ignores: ['dist/*'],
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
+    rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+    },
+  },
+  {
+    rules: {
+      '@typescript-eslint/require-await': 'off',
+      '@typescript-eslint/consistent-type-imports': 'error',
+    },
   },
   {
     languageOptions: {

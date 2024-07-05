@@ -1,0 +1,1 @@
+export type TDateAsString = string;

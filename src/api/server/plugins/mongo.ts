@@ -1,5 +1,7 @@
+import type { FastifyInstance } from 'fastify';
+import fp from 'fastify-plugin';
 import { MongoClient } from 'mongodb';
-import { FastifyInstance } from 'fastify';
+
 import config from '../../../config/index.js';
 
 declare module 'fastify' {
@@ -8,16 +10,19 @@ declare module 'fastify' {
   }
 }
 
-export default async function (app: FastifyInstance) {
-  const client = new MongoClient(
-    config.mongo.connectionUrl,
-    config.mongo.options,
-  );
+export default fp(
+  async function (app: FastifyInstance) {
+    const client = new MongoClient(
+      config.mongo.connectionUrl,
+      config.mongo.options,
+    );
 
-  await client.connect();
+    await client.connect();
 
-  app.decorate(
-    'mongo',
-    client,
-  );
-}
+    app.decorate(
+      'mongo',
+      client,
+    );
+  },
+  { name: 'mongo' },
+);
