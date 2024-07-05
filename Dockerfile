@@ -3,7 +3,7 @@ FROM node:20-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
-RUN corepack enable
+RUN corepack enable && pnpm i -g pnpm@9.4.0
 
 #COPY . /app
 WORKDIR /app

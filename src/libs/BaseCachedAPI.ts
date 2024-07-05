@@ -5,7 +5,7 @@ import type { MongoClient } from 'mongodb';
 import config from '../config/index.js';
 import {
   CachedAPIDelegateImplementation,
-} from './cachedAPIDelegateImplementation.js';
+} from './CachedAPIDelegateImplementation.js';
 
 export type TArgsSplitter<TArgs> = (args: TArgs) => TArgs[];
 export type TDataFetcher<TArgs, TRet> = (args: TArgs) => Promise<TRet>;

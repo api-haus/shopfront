@@ -1,5 +1,7 @@
 import type { RetryHandler } from 'undici';
 
+import { logger } from '../../logger.js';
+
 const calculateRetryAfterHeader = (retryAfter: number | string) => {
   const current = Date.now();
   return new Date(retryAfter).getTime() - current;
@@ -9,6 +11,14 @@ export const retryHandler: RetryHandler.RetryCallback = (err, {
   state,
   opts,
 }, cb): number | null => {
+  logger.error(
+    {
+      err,
+      state,
+    },
+    'Retrying',
+  );
+
   const { method, retryOptions } = opts;
   const {
     maxRetries = 1,

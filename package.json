@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "dist/bin/serve.js",
   "type": "module",
+  "packageManager": "pnpm@9.4.0",
   "scripts": {
-    "lint": "eslint . --ignore-pattern \"dist/*\" --ignore-pattern \"gas/*\" --ignore-pattern eslint.config.js --ignore-pattern jest.config.js",
+    "lint": "eslint . --ignore-pattern \"dist/*\" --ignore-pattern \"gas/*\" --ignore-pattern \"*.config.*\"",
     "lint:fix": "pnpm lint --fix",
     "gs:push": "(cd gas || exit 1) && pnpm push",
     "watch": "tsx watch src/bin/serve.ts | pino-pretty",
@@ -46,6 +47,7 @@
     "nock-record": "^0.3.9",
     "pino-pretty": "^11.2.1",
     "ts-jest": "^29.1.5",
+    "ts-node": "^10.9.2",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3",
     "typescript-eslint": "^7.15.0"
