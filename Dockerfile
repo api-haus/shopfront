@@ -15,15 +15,15 @@ FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 
-FROM base as server
+FROM base as serve
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist
 EXPOSE 8000
-CMD [ "pnpm", "serve:prod" ]
+CMD [ "pnpm", "bin:serve" ]
 
-FROM base as downloader
+FROM base as cron
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist
 EXPOSE 8000
-CMD [ "pnpm", "cron:download" ]
+CMD [ "pnpm", "bin:cron" ]
 

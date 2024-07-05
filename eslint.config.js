@@ -1,11 +1,28 @@
 // @ts-check
 
 import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import typescriptEslint from 'typescript-eslint';
+import stylistic from '@stylistic/eslint-plugin';
 
-export default tseslint.config(
-	eslint.configs.recommended,
-	...tseslint.configs.recommended, {
-		ignores: ['dist/*']
-	}
+export default typescriptEslint.config(
+  eslint.configs.recommended,
+  ...typescriptEslint.configs.strictTypeChecked,
+  ...typescriptEslint.configs.stylisticTypeChecked,
+  stylistic.configs['all-flat'],
+  stylistic.configs.customize({
+    indent: 2,
+    quotes: 'single',
+    semi: true,
+  }),
+  {
+    ignores: ['dist/*'],
+  },
+  {
+    languageOptions: {
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
 );

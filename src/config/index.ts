@@ -1,4 +1,4 @@
-import {newConfig, number} from 'ts-app-env';
+import {newConfig, number, string} from 'ts-app-env';
 
 const server = {
   port: number({
@@ -6,9 +6,15 @@ const server = {
     default: 8080,
   }),
 }
+const mongo = {
+  connectionUrl: string({
+    env: 'MONGO_CONNECTION_URL',
+  }),
+}
 
 const env = {
   server,
+  mongo,
 };
 
 export default newConfig(env, process.env);

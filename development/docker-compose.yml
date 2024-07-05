@@ -1,17 +1,17 @@
 services:
-  sf-api_server:
-    image: local/sf-api:server
+  sf-api_serve:
+    image: local/sf-api:serve
     build:
       context: ..
-      target: server
+      target: serve
     env_file: docker.env
     depends_on:
       - mongodb
-  sf-api_downloader:
-    image: local/sf-api:downloader
+  sf-api_cron:
+    image: local/sf-api:cron
     build:
       context: ..
-      target: downloader
+      target: cron
     env_file: docker.env
     depends_on:
       - mongodb
