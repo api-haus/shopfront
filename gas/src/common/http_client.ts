@@ -1,6 +1,6 @@
 export const httpRequest = (
-  url: string, //
   method: GoogleAppsScript.URL_Fetch.HttpMethod,
+  url: string, //
   headers?: GoogleAppsScript.URL_Fetch.HttpHeaders,
   payloadOrQuery?: Record<string, unknown>,
 ) => {

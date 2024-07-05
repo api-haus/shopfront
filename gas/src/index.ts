@@ -1,13 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { httpRequest } from './common/http_client';
 import { API_PREFIX } from './WB/constants';
 
-const adSpend = () => {
+/**
+ * @OnlyCurrentDoc
+ */
+function adSpend() {
   const { json } = httpRequest(
-    `${API_PREFIX}/adv-spend`,
     'get',
-    {},
-    {},
+    `${API_PREFIX}/adv-spend`,
   );
 
   return json;
-};
+}
