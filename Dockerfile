@@ -15,19 +15,19 @@ FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 
-FROM base as runtime
+FROM base AS runtime
 
 ENV NODE_ENV=production
 ENV NODE_OPTIONS="--enable-source-maps"
 EXPOSE 8080
 
-FROM runtime as serve
+FROM runtime AS serve
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist
 
 CMD [ "pnpm", "bin:serve" ]
 
-FROM runtime as cron
+FROM runtime AS cron
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist
 
