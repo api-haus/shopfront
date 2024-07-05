@@ -3,8 +3,18 @@ import 'dotenv/config';
 import { type FastifyListenOptions } from 'fastify';
 import type { MongoClientOptions } from 'mongodb';
 import { type LoggerOptions } from 'pino';
-import { newConfig, number, string } from 'ts-app-env';
+import { newConfig, number, option, string } from 'ts-app-env';
 import type { RetryHandler } from 'undici';
+
+import { EAppEnv } from './EAppEnv.js';
+
+const env = option<EAppEnv>(
+  {
+    env: 'NODE_ENV',
+    default: EAppEnv.Development,
+  },
+  s => s as EAppEnv,
+);
 
 const server = {
   port: number({
@@ -51,7 +61,8 @@ const wildberries = {
   },
 };
 
-const env = {
+const app = {
+  env,
   mongo,
   logger,
   server,
@@ -59,6 +70,6 @@ const env = {
 };
 
 export default newConfig(
-  env,
+  app,
   process.env,
 );
