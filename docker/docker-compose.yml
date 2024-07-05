@@ -7,6 +7,8 @@ services:
       context: ..
       target: serve
     env_file: docker.env
+    environment:
+      - WB_TESTING_KEY=${WB_TESTING_KEY}
     depends_on:
       - mongodb
   sf-api_cron:
