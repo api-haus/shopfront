@@ -12,6 +12,7 @@ const __dirname = dirname(__filename);
 
 export const app = Fastify({
   logger,
+  pluginTimeout: 60_000,
 }).withTypeProvider<TypeBoxTypeProvider>();
 
 await app.register(
