@@ -94,10 +94,13 @@ export const retryHandler: RetryHandler.RetryCallback = (err, {
 
   const retryTime = Math.min(
     retryAfter && (retryAfterHeader > 0)
-      ? retryAfterHeader + 100
+      ? retryAfterHeader
       : Math.pow(
         minTimeout,
-        state.counter * (timeoutFactor),
+        Math.max(
+          1,
+          (state.counter - 1) * (timeoutFactor),
+        ),
       ),
     maxTimeout,
   );
@@ -114,6 +117,8 @@ export const retryHandler: RetryHandler.RetryCallback = (err, {
       err,
       counter,
       retryTime,
+      code,
+      statusCode,
     },
     `Retrying`,
   );
