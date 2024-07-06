@@ -1,7 +1,6 @@
 import { batchSplit } from '../../../batching/batchSplit.js';
 import { DatesBetween } from '../../../date/DatesBetween.js';
 import { logger } from '../../../logger.js';
-import { Pause } from '../../../Pause.js';
 import type {
   CachedWildberriesAdvertAPI,
 } from '../accessors/CachedWildberriesAdvertAPI.js';
@@ -47,21 +46,13 @@ export class WBAdSpendByProductSKU {
     const allPromotionStats: IWBPromotionFullStats[] = [];
 
     for (const batchArgs of batchesOf100IdsAnd5Dates) {
-      const weight = batchArgs.reduce(
-        (a, v) => a + v.dates.length,
-        0,
-      );
-
       logger.debug(
-        { weight,
-          batchArgs },
+        { batchArgs },
         'Fetching batch',
       );
 
       const batch = await cachedWbAdvertsAPI.promotionFullStats(batchArgs);
       allPromotionStats.push(...batch);
-
-      await Pause(weight * 10_000);
     }
 
     return allPromotionStats;
