@@ -11,14 +11,6 @@ export const retryHandler: RetryHandler.RetryCallback = (err, {
   state,
   opts,
 }, cb): number | null => {
-  logger.error(
-    {
-      err,
-      state,
-    },
-    'Retrying',
-  );
-
   const { method, retryOptions } = opts;
   const {
     maxRetries = 1,
@@ -115,6 +107,15 @@ export const retryHandler: RetryHandler.RetryCallback = (err, {
       cb(null);
     },
     retryTime,
+  );
+
+  logger.error(
+    {
+      err,
+      counter,
+      retryTime,
+    },
+    `Retrying`,
   );
 
   return null;
