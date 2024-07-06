@@ -6,6 +6,7 @@ import config from '../config/index.js';
 import {
   CachedAPIDelegateImplementation,
 } from './CachedAPIDelegateImplementation.js';
+import { logger } from './logger.js';
 
 export type TArgsSplitter<TArgs> = (args: TArgs) => TArgs[];
 export type TDataFetcher<TArgs, TRet> = (args: TArgs) => Promise<TRet>;
@@ -60,11 +61,21 @@ export class BaseCachedAPI extends CachedAPIDelegateImplementation {
     }));
   }
 
-  async cachingCall<TArgs, TRet>(m: string, args: TArgs[]): Promise<TRet[]> {
-    const quantifier = this.getArgsSplitter<TArgs>(m);
+  async cachingCall<TArgs, TRet>(method: string, args: TArgs[]): Promise<TRet[]> {
+    const quantifier = this.getArgsSplitter<TArgs>(method);
     const quantizedArgs: TArgs[] = args.flatMap(a => quantifier(a));
+
+    logger.debug(
+      {
+        args,
+        method,
+        quantizedArgs,
+      },
+      'caching',
+    );
+
     const cacheHits = await this.findCachedRows<TArgs, TRet>(
-      m,
+      method,
       quantizedArgs,
     );
 
@@ -73,12 +84,19 @@ export class BaseCachedAPI extends CachedAPIDelegateImplementation {
       cacheHits,
     );
     const missingRows = await this.findReal<TArgs, TRet>(
-      m,
+      method,
       missingArgs,
     );
 
+    logger.debug(
+      {
+        missingArgs,
+      },
+      'caching',
+    );
+
     await this.saveToCache<TArgs, TRet>(
-      m,
+      method,
       missingArgs,
       missingRows,
     );
@@ -112,6 +130,13 @@ export class BaseCachedAPI extends CachedAPIDelegateImplementation {
     }));
 
     if (docs.length === 0) return;
+
+    logger.debug(
+      {
+        docs: docs.length,
+      },
+      'insertMany',
+    );
 
     await mongo.db(CACHE_DB)
       .collection<IDocument<TArgs, TRet>>(m)
