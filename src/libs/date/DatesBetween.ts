@@ -1,9 +1,13 @@
-import { addDays, differenceInDays, max, min, startOfDay } from 'date-fns';
+import {
+  addDays,
+  differenceInHours,
+  endOfDay,
+  max,
+  min,
+  startOfDay,
+} from 'date-fns';
 
 export const DatesBetween = (dateFrom: Date, dateTo: Date): Date[] => {
-  dateFrom = startOfDay(dateFrom);
-  dateTo = startOfDay(dateTo);
-
   [
     dateFrom,
     dateTo,
@@ -18,11 +22,14 @@ export const DatesBetween = (dateFrom: Date, dateTo: Date): Date[] => {
     ]),
   ];
 
+  dateFrom = startOfDay(dateFrom);
+  dateTo = endOfDay(dateTo);
+
   const datesBetween = [
-    ...Array<Date>(Math.ceil(differenceInDays(
+    ...Array<Date>(Math.ceil(differenceInHours(
       dateTo,
       dateFrom,
-    ))),
+    ) / 24)),
   ].map((_, i) => addDays(
     dateFrom,
     i,

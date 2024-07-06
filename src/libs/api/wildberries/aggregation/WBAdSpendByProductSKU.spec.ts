@@ -14,6 +14,37 @@ import { WBAdSpendByProductSKU } from './WBAdSpendByProductSKU.js';
 const record = setupRecorder();
 
 test(
+  'same dates',
+  async () => {
+    const { completeRecording, assertScopesFinished } = await record('__WBAdSpendByProductSKU');
+
+    const wbAdvertsAPI = new WildberriesAdvertAPI(testWbTokenProvider);
+    const cachedWildberriesAdvertAPI = new CachedWildberriesAdvertAPI(
+      wbAdvertsAPI,
+      testMongoClient,
+    );
+    const wbAdSpendByProductSKU = new WBAdSpendByProductSKU(
+      wbAdvertsAPI,
+      cachedWildberriesAdvertAPI,
+    );
+
+    const dateFrom = new Date('2024-06-21');
+    const dateTo = new Date('2024-06-21');
+
+    const totalRows = await wbAdSpendByProductSKU.adSpendBySKU(
+      dateFrom,
+      dateTo,
+    );
+
+    completeRecording();
+    assertScopesFinished();
+
+    expect(totalRows).toMatchSnapshot();
+  },
+  2_000_000,
+);
+
+test(
   'WBAdSpendByProductSKU',
   async () => {
     const { completeRecording, assertScopesFinished } = await record('__WBAdSpendByProductSKU');
