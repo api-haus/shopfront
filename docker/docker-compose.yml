@@ -9,22 +9,14 @@ services:
     env_file: docker.env
     environment:
       - WB_TESTING_KEY=${WB_TESTING_KEY}
-    depends_on:
-      - mongodb
+      - MONGO_CONNECTION_URL=${MONGO_CONNECTION_URL}
+
   sf-api_cron:
     image: local/sf-api:cron
     build:
       context: ..
       target: cron
     env_file: docker.env
-    depends_on:
-      - mongodb
-  mongodb:
-    image: mongodb/mongodb-community-server:7.0.12-ubi9
     environment:
-      - MONGODB_INITDB_ROOT_USERNAME=user
-      - MONGODB_INITDB_ROOT_PASSWORD=pass
-    volumes:
-      - mongo_data:/data/db
-volumes:
-  mongo_data:
+      - WB_TESTING_KEY=${WB_TESTING_KEY}
+      - MONGO_CONNECTION_URL=${MONGO_CONNECTION_URL}
