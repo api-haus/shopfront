@@ -53,7 +53,7 @@ const wildberries = {
     }),
     retryOptions: {
       maxRetries: 15,
-      minTimeout: 10_000,
+      minTimeout: 30_000,
       maxTimeout: 600_000,
       retryAfter: true,
       timeoutFactor: 1.5,
