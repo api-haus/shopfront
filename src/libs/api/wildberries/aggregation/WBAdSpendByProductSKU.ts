@@ -20,6 +20,7 @@ export class WBAdSpendByProductSKU {
     const advertIDs = adverts.flatMap((av) => {
       return av.advert_list.map(av => av.advertId);
     });
+    advertIDs.sort();
 
     const datesBetween = DatesBetween(
       dateFrom,
