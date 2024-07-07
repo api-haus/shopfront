@@ -1,3 +1,4 @@
+import { UTCDate } from '@date-fns/utc';
 import { expect, test } from '@jest/globals';
 
 import { testAdvertIds } from '../../../test/fixtures/advertIDs.js';
@@ -21,7 +22,7 @@ test(
     const allStats = await p.promotionFullStats([
       idDatesArg(
         testAdvertIds[45],
-        [new Date('2024-06-24')],
+        [new UTCDate('2024-06-21')],
       ),
     ]);
 

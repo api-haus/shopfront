@@ -1,3 +1,4 @@
+import { UTCDate } from '@date-fns/utc';
 import { expect, test } from '@jest/globals';
 import { setupRecorder } from 'nock-record';
 
@@ -28,8 +29,8 @@ test(
       cachedWildberriesAdvertAPI,
     );
 
-    const dateFrom = new Date('2024-06-21');
-    const dateTo = new Date('2024-06-21');
+    const dateFrom = new UTCDate('2024-06-21');
+    const dateTo = new UTCDate('2024-06-21');
 
     const totalRows = await wbAdSpendByProductSKU.adSpendBySKU(
       dateFrom,
@@ -59,8 +60,8 @@ test(
       cachedWildberriesAdvertAPI,
     );
 
-    const dateFrom = new Date('2024-06-21');
-    const dateTo = new Date('2024-06-22');
+    const dateFrom = new UTCDate('2024-06-21');
+    const dateTo = new UTCDate('2024-06-22');
 
     const totalRows = await wbAdSpendByProductSKU.adSpendBySKU(
       dateFrom,

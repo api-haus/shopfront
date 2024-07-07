@@ -1,3 +1,5 @@
+import type { UTCDate } from '@date-fns/utc';
+
 import { toDateString } from '../../../date/toDateString.js';
 import type { TDateAsString } from '../../scalars/TDateAsString.js';
 
@@ -7,7 +9,7 @@ export interface IIdAndDates {
 }
 
 export class IDAndDatesArg {
-  constructor(protected id: number, protected dates: Date[]) {
+  constructor(protected id: number, protected dates: UTCDate[]) {
   }
 
   toRequestOptions(): IIdAndDates {
@@ -22,7 +24,7 @@ export class IDAndDatesArg {
   }
 }
 
-export const idDatesArg = (id: number, dates: Date[]): IIdAndDates => new IDAndDatesArg(
+export const idDatesArg = (id: number, dates: UTCDate[]): IIdAndDates => new IDAndDatesArg(
   id,
   dates,
 ).toRequestOptions();

@@ -1,3 +1,4 @@
+import type { UTCDate } from '@date-fns/utc';
 import {
   addDays,
   differenceInHours,
@@ -7,7 +8,7 @@ import {
   startOfDay,
 } from 'date-fns';
 
-export const DatesBetween = (dateFrom: Date, dateTo: Date): Date[] => {
+export const DatesBetween = (dateFrom: UTCDate, dateTo: UTCDate): UTCDate[] => {
   [
     dateFrom,
     dateTo,
@@ -15,18 +16,18 @@ export const DatesBetween = (dateFrom: Date, dateTo: Date): Date[] => {
     min([
       dateFrom,
       dateTo,
-    ]),
+    ]) as UTCDate,
     max([
       dateFrom,
       dateTo,
-    ]),
+    ]) as UTCDate,
   ];
 
   dateFrom = startOfDay(dateFrom);
   dateTo = endOfDay(dateTo);
 
   const datesBetween = [
-    ...Array<Date>(Math.ceil(differenceInHours(
+    ...Array<UTCDate>(Math.ceil(differenceInHours(
       dateTo,
       dateFrom,
     ) / 24)),

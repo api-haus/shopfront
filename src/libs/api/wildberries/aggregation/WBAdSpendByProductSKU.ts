@@ -1,18 +1,17 @@
-import { batchSplit } from '../../../batching/batchSplit.js';
+import type { UTCDate } from '@date-fns/utc';
+
 import { DatesBetween } from '../../../date/DatesBetween.js';
-import { logger } from '../../../logger.js';
 import type {
   CachedWildberriesAdvertAPI,
 } from '../accessors/CachedWildberriesAdvertAPI.js';
 import type { WildberriesAdvertAPI } from '../clients/WildberriesAdvertAPI.js';
 import { idDatesArg } from '../params/IDAndDatesArg.js';
-import type { IWBPromotionFullStats } from '../types/IWBPromotionFullStats.js';
 
 export class WBAdSpendByProductSKU {
   constructor(protected wbAdvertsAPI: WildberriesAdvertAPI, protected cachedWbAdvertsAPI: CachedWildberriesAdvertAPI) {
   }
 
-  async adSpendBySKU(dateFrom: Date, dateTo: Date) {
+  async adSpendBySKU(dateFrom: UTCDate, dateTo: UTCDate) {
     const { wbAdvertsAPI, cachedWbAdvertsAPI } = this;
 
     const { adverts } = await wbAdvertsAPI.groupedPromotionCounts();
@@ -25,35 +24,17 @@ export class WBAdSpendByProductSKU {
       dateFrom,
       dateTo,
     );
-    const batchesBy5Days = batchSplit(
-      datesBetween,
-      5,
-    );
-    const batchesBy100AdIds = batchSplit(
-      advertIDs,
-      100,
-    );
 
-    const batchesOf100IdsAnd5Dates = batchesBy100AdIds.flatMap((hundredIds) => {
-      return hundredIds.map((id) => {
-        return batchesBy5Days.map(fiveDates => idDatesArg(
+    const allInputs = datesBetween.flatMap((date) => {
+      return advertIDs.map((id) => {
+        return idDatesArg(
           id,
-          fiveDates,
-        ));
+          [date],
+        );
       });
     });
 
-    const allPromotionStats: IWBPromotionFullStats[] = [];
-
-    for (const batchArgs of batchesOf100IdsAnd5Dates) {
-      logger.debug(
-        { batchArgs },
-        'Fetching batch',
-      );
-
-      const batch = await cachedWbAdvertsAPI.promotionFullStats(batchArgs);
-      allPromotionStats.push(...batch);
-    }
+    const allPromotionStats = await cachedWbAdvertsAPI.promotionFullStats(allInputs);
 
     return allPromotionStats;
   }

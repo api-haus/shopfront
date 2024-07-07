@@ -1,7 +1,7 @@
 import { constants } from 'node:http2';
 
 import Bottleneck from 'bottleneck';
-import { getGlobalDispatcher, interceptors } from 'undici';
+import { Client, interceptors } from 'undici';
 
 import config from '../../../../config/index.js';
 import { TokenizedAPIClient } from '../../clients/TokenizedAPIClient.js';
@@ -17,10 +17,15 @@ export const CPrefixAdvertAPIV2 = 'https://advert-api.wildberries.ru/adv/v2';
 export class WildberriesAdvertAPI extends TokenizedAPIClient {
   bottleneck = new Bottleneck({
     maxConcurrent: 1,
-    minTime: 5000,
+    minTime: 1000 / 3,
   });
 
-  dispatcher = getGlobalDispatcher()
+  dispatcher = new Client(
+    'https://advert-api.wildberries.ru',
+    {
+      strictContentLength: false,
+    },
+  )
     .compose(interceptors.retry({
       ...config.wildberries.api.retryOptions,
       retry: retryHandler,
@@ -71,7 +76,7 @@ export class WildberriesAdvertAPI extends TokenizedAPIClient {
     return this.rateLimitedCall<IWBPromotionFullStats[]>(
       {
         maxConcurrent: 1,
-        minTime: 1000 / 5 + 100, // max 5 rps
+        minTime: 30000, // max 5 rps
       },
       `${CPrefixAdvertAPIV2}/fullstats`,
       {
@@ -81,12 +86,14 @@ export class WildberriesAdvertAPI extends TokenizedAPIClient {
         },
         body: JSON.stringify(idsAndDates),
       },
-    ).catch((err: unknown) => {
-      if ((err as Error).message.includes('нет кампаний')) {
-        return [];
-      }
-      throw err;
-    });
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    ).then(res => (res ?? [])) // WB kink (it will return null 🙄)
+      .catch((err: unknown) => {
+        if ((err as Error).message.includes('нет кампаний')) {
+          return [];
+        }
+        throw err;
+      });
   }
 
   async promotionAdvertsInfo(advertIds: number[]): Promise<IPromotionAdvertsInfo> {

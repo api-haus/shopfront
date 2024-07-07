@@ -1,3 +1,4 @@
+import { UTCDate } from '@date-fns/utc';
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { Type } from '@sinclair/typebox';
 import type { FastifyInstance } from 'fastify';
@@ -22,8 +23,8 @@ export default async function (app: FastifyInstance) {
     },
     handler: async (req) => {
       const { rawDateFrom, rawDateTo } = req.params;
-      const dateFrom = new Date(rawDateFrom);
-      const dateTo = new Date(rawDateTo);
+      const dateFrom = new UTCDate(rawDateFrom);
+      const dateTo = new UTCDate(rawDateTo);
 
       const wbAdSpendByProductSKU = new WBAdSpendByProductSKU(
         req.server.wbAdvertsAPI,
@@ -37,7 +38,8 @@ export default async function (app: FastifyInstance) {
       const rows = totalRows.map(x => x.days.map(d => d.apps.map(a => a.nm.map(n => [
         n.nmId,
         n.sum,
-      ] as [number, number])))).flat()
+      ] as [number, number]))))
+        .flat()
         .flat()
         .flat();
 

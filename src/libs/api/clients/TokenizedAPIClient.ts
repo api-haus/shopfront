@@ -2,6 +2,7 @@ import type Bottleneck from 'bottleneck';
 import type { Dispatcher, RequestInfo, RequestInit } from 'undici';
 import { fetch } from 'undici';
 
+import { SafeJsonParse } from '../../SafeJsonParse.js';
 import { getBottleneck } from '../BottleneckCollection.js';
 import { APIError } from '../errors/APIError.js';
 import { encodeToken } from '../tokens/encodeToken.js';
@@ -61,13 +62,17 @@ export class TokenizedAPIClient {
 
     const { status } = response;
 
+    const responseText = await response.text();
+
     if (status !== 200) {
       throw new APIError(
         status,
-        await response.text(),
+        responseText,
       );
     }
 
-    return await response.json() as TData;
+    const responseJson = SafeJsonParse(responseText);
+
+    return responseJson as TData;
   }
 }

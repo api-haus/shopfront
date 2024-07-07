@@ -19,7 +19,7 @@ const jestConfig: JestConfigWithTsJest = {
   },
   detectOpenHandles: true,
   forceExit: true,
-  testPathIgnorePatterns: ["\\*.js$"]
+  testPathIgnorePatterns: [".js"]
 }
 
 export default jestConfig

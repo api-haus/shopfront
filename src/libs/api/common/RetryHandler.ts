@@ -1,3 +1,4 @@
+import { formatDuration } from 'date-fns';
 import type { RetryHandler } from 'undici';
 
 import { logger } from '../../logger.js';
@@ -105,14 +106,7 @@ export const retryHandler: RetryHandler.RetryCallback = (err, {
     maxTimeout,
   );
 
-  setTimeout(
-    () => {
-      cb(null);
-    },
-    retryTime,
-  );
-
-  logger.error(
+  logger.warn(
     {
       err,
       counter,
@@ -120,8 +114,15 @@ export const retryHandler: RetryHandler.RetryCallback = (err, {
       code,
       statusCode,
     },
-    `Retrying`,
+    `Retrying in ${formatDuration({ seconds: retryTime / 1000 })}`,
   );
 
-  return null;
+  setTimeout(
+    () => {
+      cb(null);
+    },
+    retryTime,
+  );
+
+  return retryTime;
 };
